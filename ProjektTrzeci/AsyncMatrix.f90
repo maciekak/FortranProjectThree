@@ -45,7 +45,8 @@ subroutine multiplication(first, second, n, m, resultMatrix)
         end do
     end if
     
-    deallocate(buffor)            
+    deallocate(buffor)        
+    
 end subroutine multiplication
     
    !---------------------------------------------------------------------------  
@@ -103,5 +104,68 @@ subroutine gauss(first, second, n))
     
     deallocate(asyncFirst)
     deallocate(asyncSecond)
-end subroutine gauss
     
+    end subroutine gauss
+    
+    
+program AMatrix
+
+  integer ( kind = 8) :: i, n, step, start
+
+    start = 1
+    n = 500
+    step = 5
+    
+
+  do i = start, n, step
+    call measure(i)
+  end do
+
+  contains
+
+  subroutine measure(isize)
+    implicit none
+    integer (kind=4) :: status
+    integer (kind=8) :: i, j
+    integer (kind=8), intent(in) :: isize
+    real (kind=8), allocatable :: first(:,:), second(:, :), multiply(:, :)
+    real (kind=8) :: start, stop
+
+    allocate(first(isize, isize))
+    allocate(second(isize, isize))
+    allocate(multiply(isize, isize))
+
+    first = 1.4
+    second = 2.4
+
+    call cpu_time(start)
+    call multiplication(first, second, multiply, status)
+    call cpu_time(stop)
+
+    if (THIS_IMAGE() .EQ. 1) then
+      print '("mm_par;",i6,";",i6,";",f15.7,"")', isize, NUM_IMAGES(), (stop - start)
+    end if
+
+    do i=1,isize,1
+      do j=1,isize,1
+        first(i,j) = (i * isize) * j
+      end do
+      second(1,i) = i
+    end do
+
+    call cpu_time(start)
+    call gauss(first, second(1,:), isize - 1)
+    call cpu_time(stop)
+
+    if (THIS_IMAGE() .EQ. 1) then
+      print '("gauss_par;",i6,";",i6,";",f15.7,"")', isize, NUM_IMAGES(), (stop - start)
+    end if
+
+    sync all
+
+    deallocate(first)
+    deallocate(second)
+    deallocate(multiply)
+  end subroutine
+  
+end program
