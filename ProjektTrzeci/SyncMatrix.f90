@@ -1,3 +1,19 @@
+   !---------------------------------------------------------------------------  
+   !> @author 
+   !> Maciej Klimowski
+   !
+   ! DESCRIPTION: 
+   !> Routine multiply two matrixes 
+   !
+   ! REVISION HISTORY:
+   ! 23 06 2018 - Initial Version
+   !
+   !> @param[in] n - first dimension
+   !> @param[in] m - second dimension
+   !> @param[in] first - first matrix
+   !> @param[in] second - second matrix
+   !> @param[out] resultMatrix - the result of multiplication
+   !--------------------------------------------------------------------------- 
 subroutine multiplication(first, second, n, m, resultMatrix)
     implicit none
     real (kind = 8), dimension(n, m), intent(in) :: first
@@ -19,7 +35,20 @@ subroutine multiplication(first, second, n, m, resultMatrix)
     end do
 end subroutine multiplication
     
-    
+   !---------------------------------------------------------------------------  
+   !> @author 
+   !> Maciej Klimowski
+   !
+   ! DESCRIPTION: 
+   !> Routine doing gauss elimination
+   !
+   ! REVISION HISTORY:
+   ! 23 06 2018 - Initial Version
+   !
+   !> @param[in] n - size of matrix
+   !> @param[inout] first - main matrix
+   !> @param[inout] second - right vector 
+   !---------------------------------------------------------------------------   
 subroutine gauss(first, second, n))
     implicit none
     real (kind = 8), dimension(n, n), intent(inout) :: first
